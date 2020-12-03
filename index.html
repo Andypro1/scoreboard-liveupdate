@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #scoreboard {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            #scoreboard > div {
+                display: flex;
+                flex-direction: column;
+            }
+
+            aside {
+                font-style: italic;
+                margin: 2rem auto;
+            }
+        </style>
+    </head>
+    <body>
+        <aside>
+            Note: Works in all browsers when served from http/s.  Works in Firefox from file:/// after changing
+            <span style="font-weight: bold;">security.fileuri.strict_origin_policy</span> setting in <a href="about://config">about:config</a>
+            (navigate manually in address bar).
+        </aside>
+
+        <section id="scoreboard">
+            <div>
+                <div>Team</div>
+                <div id="HomeTeamName">1</div>
+                <div id="GuestTeamName">2</div>
+            </div>
+            <div>
+                <div>Fouls</div>
+                <div id="hFouls">5</div>
+                <div id="gFouls">6</div>
+            </div>
+            <div>
+                <div>Timeouts</div>
+                <div id="hTol">7</div>
+                <div id="gTol">8</div>
+            </div>
+            <div>
+                <div>Score</div>
+                <div id="hScore">3</div>
+                <div id="gScore">4</div>
+            </div>
+        </section>
+    </body>
+
+    <script>
+        (window.getScores = (window, undefined) => {
+            fetch('myScoreboard.xml')
+                .then(r => r.text())
+                .then(s => (new DOMParser()).parseFromString(s, 'text/xml'))
+                .then(d => {
+                    const fields = ['HomeTeamName', 'GuestTeamName', 'gFouls', 'hFouls', 'hScore', 'gScore', 'hTol', 'gTol']
+
+                    //  Output fields
+                    fields.forEach(f => document.querySelector(`#${f}`).innerHTML = d.querySelector(f).textContent);
+               
+                    //  Schedule re-run after 3s
+                    setTimeout(getScores, 3000);
+               })
+                .catch(e => console.error(`Problem displaying scores: ${e}`));
+        })(window);
+    </script>
+</html>

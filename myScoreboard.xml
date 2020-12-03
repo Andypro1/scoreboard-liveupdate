@@ -1,0 +1,138 @@
+<?xml version="1.0" standalone="yes"?>
+<ScoreboardOutput>
+  <ScoreOutput>
+    <Sport>BASKETBALL</Sport>
+    <Min>8</Min>
+    <Sec>0</Sec>
+    <Tenth>0</Tenth>
+    <ShowTenths>false</ShowTenths>
+    <ShowTOD>false</ShowTOD>
+    <Horn>false</Horn>
+    <AuxHorn>false</AuxHorn>
+    <Lights>false</Lights>
+    <AuxTime>35</AuxTime>
+    <Aux2Time>0</Aux2Time>
+    <Period>1</Period>
+    <hScore>2</hScore>
+    <hTol>5</hTol>
+    <hBonus>false</hBonus>
+    <hDBonus>false</hDBonus>
+    <hPoss>false</hPoss>
+    <hFouls>0</hFouls>
+    <gScore>1</gScore>
+    <gTol>5</gTol>
+    <gBonus>false</gBonus>
+    <gDBonus>false</gDBonus>
+    <gPoss>false</gPoss>
+    <gFouls>0</gFouls>
+    <PlrNum>0</PlrNum>
+    <PlrFoul>0</PlrFoul>
+    <UseStats>true</UseStats>
+  </ScoreOutput>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <hPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </hPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <gPlrStat>
+    <PlrNum />
+    <PlrCol1 />
+    <PlrCol2 />
+    <PlrCol3 />
+  </gPlrStat>
+  <GameDescription>
+    <FileName>C:\Users\lives\Documents\myScoreboard.xml</FileName>
+    <HomeTeamName>Patriots</HomeTeamName>
+    <HomeColor>0x0069AA</HomeColor>
+    <GuestTeamName>Vikings</GuestTeamName>
+    <GuestColor>0x79133E</GuestColor>
+    <CityLocation>Portsmouth</CityLocation>
+    <StateLocation>VA</StateLocation>
+    <Division>Boys Basketball</Division>
+  </GameDescription>
+</ScoreboardOutput>
