@@ -1,70 +1,340 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            #scoreboard {
-                display: flex;
-                width: 100%;
-                justify-content: space-between;
-            }
 
-            #scoreboard > div {
-                display: flex;
-                flex-direction: column;
-            }
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0);
+            overflow: hidden;
+        }
 
-            aside {
-                font-style: italic;
-                margin: 2rem auto;
-            }
-        </style>
-    </head>
-    <body>
-        <aside>
-            Note: Works in all browsers when served from http/s.  Works in Firefox from file:/// after changing
-            <span style="font-weight: bold;">security.fileuri.strict_origin_policy</span> setting in <a href="about://config">about:config</a>
-            (navigate manually in address bar).
-        </aside>
+        /* Scoreboard object */
+        #scoreboard {
+            /*  For debug */
+            /* background-color: lightskyblue; */
 
-        <section id="scoreboard">
-            <div>
-                <div>Team</div>
-                <div id="HomeTeamName">1</div>
-                <div id="GuestTeamName">2</div>
-            </div>
-            <div>
-                <div>Fouls</div>
-                <div id="hFouls">5</div>
-                <div id="gFouls">6</div>
-            </div>
-            <div>
-                <div>Timeouts</div>
-                <div id="hTol">7</div>
-                <div id="gTol">8</div>
-            </div>
-            <div>
-                <div>Score</div>
-                <div id="hScore">3</div>
-                <div id="gScore">4</div>
+            /*  For layout */
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            flex: 1 0 auto;
+            text-transform: uppercase;
+            border-top: 2px solid darkgray;
+            border-bottom: 2px solid darkgray;
+        }
+
+        /* Primary scoreboard sections */
+        .name-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            line-height: 2rem;
+            padding: 0 0.3rem;
+            color: white;
+        }
+
+        .timeouts-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            font-size: 0.8rem;
+        }
+
+        .score-section {
+            align-self: stretch;
+            font-weight: 800;
+            font-size: 4.2rem;
+            padding: 0 0.8rem;
+            color: white;
+            min-width: 5rem;
+            text-align: center;
+        }
+
+        .timer-section {
+            border-left: 2px solid white;
+            border-right: 2px solid white;
+            background-color: hsl(90, 100%, 0%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 0 1.2rem;
+            min-width: 5.625rem;
+        }
+
+        /* Scoreboard subsections */
+        .name {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-top: 1rem;
+            min-width: 10.125rem;
+        }
+
+        .fouls-info {
+            font-weight: 700;
+            font-size: 1.1rem;
+            align-self: flex-start;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .timeouts {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeouts>div {
+            content: var(--timeoutEmptySVG);
+            margin: -2px 0;
+        }
+
+        .possession {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 2rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .timer {
+            font-weight: 700;
+            font-size: 2.2rem;
+            text-align: center;
+        }
+
+        .shotclock-period {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shotclock {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: hsl(57, 38%, 56%);
+        }
+
+        .period {
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-transform: none;
+        }
+
+        /* Utility classes */
+        :root {
+            --PArrowLeftSVG: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M21.842 6.218a1.977 1.977 0 0 0-.424-.628A1.99 1.99 0 0 0 20 5H8c-.297 0-.578.132-.769.359l-5 6c-.309.371-.309.91 0 1.281l5 6c.191.228.472.36.769.36h12a1.977 1.977 0 0 0 1.41-.582A1.99 1.99 0 0 0 22 17V7c0-.266-.052-.525-.158-.782z" fill="%23ffffff"/></svg>');
+            --PArrowRightSVG: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g transform="rotate(180 12 12)"><path d="M21.842 6.218a1.977 1.977 0 0 0-.424-.628A1.99 1.99 0 0 0 20 5H8c-.297 0-.578.132-.769.359l-5 6c-.309.371-.309.91 0 1.281l5 6c.191.228.472.36.769.36h12a1.977 1.977 0 0 0 1.41-.582A1.99 1.99 0 0 0 22 17V7c0-.266-.052-.525-.158-.782z" fill="%23ffffff"/></g></svg>');
+            --timeoutEmptySVG: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 16.5a4.5 4.5 0 1 0 0-9a4.5 4.5 0 0 0 0 9zm0 1.5a6 6 0 1 0 0-12a6 6 0 0 0 0 12z" fill="%23ffffff"/></svg>');
+            --timeoutFullSVG: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 4a4 4 0 1 0 0 8a4 4 0 0 0 0-8z" fill="%23ffffff"/></svg>');
+
+            --team1Color: #040404;
+            --team2Color: #C66820;
+        }
+
+        .team1 {
+            background-color: var(--team1Color);
+        }
+
+        .team1-text {
+            text-align: right;
+        }
+
+        .team2 {
+            background-color: var(--team2Color);
+        }
+
+        .left {
+            padding: 0 0.4rem 0 0.7rem;
+            background-image: var(--PArrowLeftSVG);
+        }
+
+        .right {
+            padding: 0 0.7rem 0 0.4rem;
+            background-image: var(--PArrowRightSVG);
+        }
+
+        .start {
+            align-self: flex-start;
+        }
+
+        .end {
+            align-self: flex-end;
+        }
+
+        .plus {
+            margin-left: -0.2rem;
+        }
+
+        .visible {
+            visibility: visible;
+        }
+
+        .invisible {
+            visibility: hidden;
+        }
+
+        .extrusion {
+            flex: 1 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <main id="scoreboard">
+        <section class="team1 extrusion"></section>
+        <section class="team1 name-section">
+            <div class="team1-text name" id="HomeTeamName">e</div>
+            <div class="fouls-info">
+                <div>
+                    Fouls: <span id="hFouls">e</span>
+                </div>
+                <div>
+                    <span id="hBonus"></span>
+                    <span class="plus" id="hDBonus"></span>
+                </div>
             </div>
         </section>
-    </body>
+        <section class="team1 timeouts-section">
+            <div class="timeouts end" id="hTol">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="left possession" id="hPoss">P</div>
+        </section>
+        <section class="team1 score-section" id="hScore">e</section>
+        <section class="timer-section">
+            <div class="timer">e</div>
+            <div class="shotclock-period">
+                <div class="shotclock" id="AuxTime">e</div>
+                <div class="period" id="Period">e</div>
+            </div>
+        </section>
+        <section class="team2 score-section" id="gScore">e</section>
+        <section class="team2 timeouts-section">
+            <div class="timeouts start" id="gTol">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="right possession" id="gPoss">P</div>
+        </section>
+        <section class="team2 name-section">
+            <div class="team2-text name" id="GuestTeamName">e</div>
+            <div class="fouls-info">
+                <div>
+                    Fouls: <span id="gFouls">e</span>
+                </div>
+                <div>
+                    <span id="gBonus"></span>
+                    <span class="plus" id="gDBonus"></span>
+                </div>
+            </div>
+        </section>
+        <section class="team2 extrusion"></section>
+    </main>
+</body>
 
-    <script>
-        (window.getScores = (window, undefined) => {
-            fetch('myScoreboard.xml')
-                .then(r => r.text())
-                .then(s => (new DOMParser()).parseFromString(s, 'text/xml'))
-                .then(d => {
-                    const fields = ['HomeTeamName', 'GuestTeamName', 'gFouls', 'hFouls', 'hScore', 'gScore', 'hTol', 'gTol']
+<script type="module">
+    function OutputTimeouts(fieldname, value) {
+        //  Guard clause
+        if (value > 5 || value < 0)
+            return;
 
-                    //  Output fields
-                    fields.forEach(f => document.querySelector(`#${f}`).innerHTML = d.querySelector(f).textContent);
-               
-                    //  Schedule re-run after 3s
-                    setTimeout(getScores, 3000);
-               })
-                .catch(e => console.error(`Problem displaying scores: ${e}`));
-        })(window);
-    </script>
+        const parent = document.querySelector(`#${fieldname}`);
+        const timeoutsToFill = parent.querySelectorAll(`div:nth-last-child(-n+${value})`);
+
+        timeoutsToFill.forEach(f => f.style.content = 'var(--timeoutFullSVG)');
+    };
+
+    function OutputMaps(fieldObject, value) {
+        const field = document.querySelector(`#${fieldObject.field}`);
+        const replacement = fieldObject.maps.find(m => m.value === value)?.output;
+
+        if (field && replacement)
+            field.innerHTML = replacement;
+    };
+
+    function OutputFlag(fieldname, value) {
+        const field = document.querySelector(`#${fieldname}`);
+
+        if (field && value === 'true') {
+            field.classList.add('visible');
+            field.classList.remove('invisible');
+        }
+        else {
+            field.classList.add('invisible');
+            field.classList.remove('visible');
+        }
+    };
+
+    function OutputColor(fieldname, value) {
+        const color = value.replace('0x', '#');
+
+        if (fieldname === 'HomeColor')
+            document.documentElement.style.setProperty('--team1Color', color);
+        else if (fieldname === 'GuestColor')
+            document.documentElement.style.setProperty('--team2Color', color);
+    }
+
+    function SetGameTimer(min, sec, decisec, showDecisec) {
+        const timer = document.querySelector('.timer');
+        var seconds = ('00' + sec);
+
+        seconds = seconds.slice(seconds.length - 2);
+
+        if (timer)
+            timer.innerHTML = `${min}:${seconds}${(showDecisec === 'true' ? '.' + decisec : '')}`;
+    }
+
+    (window.getScores = (window, undefined) => {
+        fetch('myScoreboard.xml')
+            .then(r => r.text())
+            .then(s => (new DOMParser()).parseFromString(s, 'text/xml'))
+            .then(d => {
+                const textFields = ['HomeTeamName', 'GuestTeamName', 'gFouls', 'hFouls', 'hScore', 'gScore', 'AuxTime'];
+                textFields.forEach(f => { document.querySelector(`#${f}`).innerHTML = d.querySelector(f).textContent; });
+
+                const timeoutFields = ['hTol', 'gTol'];
+                timeoutFields.forEach(f => OutputTimeouts(f, d.querySelector(f).textContent));
+
+                const mapFields = [
+                    { field: 'hBonus', maps: [{ value: 'true', output: 'Bonus' }] },
+                    { field: 'gBonus', maps: [{ value: 'true', output: 'Bonus' }] },
+                    { field: 'hDBonus', maps: [{ value: 'true', output: '+' }] },
+                    { field: 'gDBonus', maps: [{ value: 'true', output: '+' }] },
+                    { field: 'Period', maps: [{ value: '1', output: '1st' }, { value: '2', output: '2nd' }, { value: '3', output: '3rd' }, { value: '4', output: '4th' }] },
+                ];
+
+                mapFields.forEach(f => OutputMaps(f, d.querySelector(f.field).textContent));
+
+                const flagFields = ['hPoss', 'gPoss'];
+                flagFields.forEach(f => OutputFlag(f, d.querySelector(f).textContent));
+
+                const colorFields = ['HomeColor', 'GuestColor'];
+                colorFields.forEach(f => OutputColor(f, d.querySelector(f).textContent));
+
+                SetGameTimer(d.querySelector('Min')?.textContent, d.querySelector('Sec')?.textContent,
+                    d.querySelector('Tenth')?.textContent, d.querySelector('ShowTenths')?.textContent);
+
+                //  Schedule re-run after 1s
+                setTimeout(getScores, 1000);
+            })
+            .catch(e => console.error(`Problem displaying scores: ${e}`));
+    })(window);
+</script>
+
 </html>

@@ -3,7 +3,7 @@
   <ScoreOutput>
     <Sport>BASKETBALL</Sport>
     <Min>8</Min>
-    <Sec>0</Sec>
+    <Sec>3</Sec>
     <Tenth>0</Tenth>
     <ShowTenths>false</ShowTenths>
     <ShowTOD>false</ShowTOD>
@@ -13,11 +13,11 @@
     <AuxTime>35</AuxTime>
     <Aux2Time>0</Aux2Time>
     <Period>1</Period>
-    <hScore>2</hScore>
-    <hTol>5</hTol>
-    <hBonus>false</hBonus>
+    <hScore>55</hScore>
+    <hTol>3</hTol>
+    <hBonus>true</hBonus>
     <hDBonus>false</hDBonus>
-    <hPoss>false</hPoss>
+    <hPoss>true</hPoss>
     <hFouls>0</hFouls>
     <gScore>1</gScore>
     <gTol>5</gTol>
@@ -129,7 +129,7 @@
     <FileName>C:\Users\lives\Documents\myScoreboard.xml</FileName>
     <HomeTeamName>Patriots</HomeTeamName>
     <HomeColor>0x0069AA</HomeColor>
-    <GuestTeamName>Vikings</GuestTeamName>
+    <GuestTeamName>Roughriders</GuestTeamName>
     <GuestColor>0x79133E</GuestColor>
     <CityLocation>Portsmouth</CityLocation>
     <StateLocation>VA</StateLocation>
