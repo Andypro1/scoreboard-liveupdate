@@ -170,10 +170,6 @@
             align-self: flex-end;
         }
 
-        .plus {
-            margin-left: -0.2rem;
-        }
-
         .visible {
             visibility: visible;
         }
@@ -199,7 +195,7 @@
                 </div>
                 <div>
                     <span id="hBonus"></span>
-                    <span class="plus" id="hDBonus"></span>
+                    <span id="hDBonus"></span>
                 </div>
             </div>
         </section>
@@ -240,7 +236,7 @@
                 </div>
                 <div>
                     <span id="gBonus"></span>
-                    <span class="plus" id="gDBonus"></span>
+                    <span id="gDBonus"></span>
                 </div>
             </div>
         </section>
@@ -255,17 +251,21 @@
             return;
 
         const parent = document.querySelector(`#${fieldname}`);
+        const timeoutsToEmpty = parent.querySelectorAll(`div:nth-child(-n+${5 - value})`);
         const timeoutsToFill = parent.querySelectorAll(`div:nth-last-child(-n+${value})`);
 
+        timeoutsToEmpty.forEach(f => f.style.content = 'var(--timeoutEmptySVG)');
         timeoutsToFill.forEach(f => f.style.content = 'var(--timeoutFullSVG)');
     };
 
     function OutputMaps(fieldObject, value) {
         const field = document.querySelector(`#${fieldObject.field}`);
-        const replacement = fieldObject.maps.find(m => m.value === value)?.output;
+        const replacement = fieldObject.maps.find(m => m.value === value);
 
-        if (field && replacement)
-            field.innerHTML = replacement;
+        if (field && replacement && replacement.output)
+            field.innerHTML = replacement.output;
+        else if(field)
+            field.innerHTML = '';
     };
 
     function OutputFlag(fieldname, value) {
@@ -282,7 +282,7 @@
     };
 
     function OutputColor(fieldname, value) {
-        const color = value.replace('0x', '#');
+        const color = `${value.replace('0x', '#')}d0`;
 
         if (fieldname === 'HomeColor')
             document.documentElement.style.setProperty('--team1Color', color);
@@ -327,8 +327,8 @@
                 const colorFields = ['HomeColor', 'GuestColor'];
                 colorFields.forEach(f => OutputColor(f, d.querySelector(f).textContent));
 
-                SetGameTimer(d.querySelector('Min')?.textContent, d.querySelector('Sec')?.textContent,
-                    d.querySelector('Tenth')?.textContent, d.querySelector('ShowTenths')?.textContent);
+                SetGameTimer(d.querySelector('Min').textContent, d.querySelector('Sec').textContent,
+                    d.querySelector('Tenth').textContent, d.querySelector('ShowTenths').textContent);
 
                 //  Schedule re-run after 1s
                 setTimeout(getScores, 1000);
