@@ -113,7 +113,7 @@
 
         .shotclock-period {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
         }
 
@@ -245,96 +245,150 @@
 </body>
 
 <script type="module">
-    function OutputTimeouts(fieldname, value) {
-        //  Guard clause
-        if (value > 5 || value < 0)
-            return;
+    window.ScoreboardDisplay = (function ScoreboardDisplay(maxTimeouts, bgAlpha, leadingZero) {
+        const _max         = maxTimeouts;
+        const _alpha       = bgAlpha;
+        const _leadingZero = leadingZero;
 
-        const parent = document.querySelector(`#${fieldname}`);
-        const timeoutsToEmpty = parent.querySelectorAll(`div:nth-child(-n+${5 - value})`);
-        const timeoutsToFill = parent.querySelectorAll(`div:nth-last-child(-n+${value})`);
+        const OutputText = (field, value) => {
+            if(field)
+                field.innerHTML = value;
+        };
 
-        timeoutsToEmpty.forEach(f => f.style.content = 'var(--timeoutEmptySVG)');
-        timeoutsToFill.forEach(f => f.style.content = 'var(--timeoutFullSVG)');
+        const OutputCounter = (field, value) => {
+            //  Guard clause
+            if (value > _max || value < 0 || typeof(field) === 'undefined') 
+                return;
+
+            const counterToEmpty = field.querySelectorAll(`div:nth-child(-n+${_max - value})`);
+            const counterToFill  = field.querySelectorAll(`div:nth-last-child(-n+${value})`);
+
+            counterToEmpty.forEach(f => f.style.content = 'var(--timeoutEmptySVG)');
+            counterToFill.forEach(f => f.style.content = 'var(--timeoutFullSVG)');
+        };
+
+        const OutputMapped = (field, value, maps) => {
+            const replacement = maps.find(m => m.value === value);
+
+            if (field && replacement && replacement.output)
+                field.innerHTML = replacement.output;
+            else if(field)
+                field.innerHTML = '';
+        };
+
+        const OutputShowHide = (field, value) => {
+            if (field && value === 'true') {
+                field.classList.add('visible');
+                field.classList.remove('invisible');
+            }
+            else {
+                field.classList.add('invisible');
+                field.classList.remove('visible');
+            }
+        };
+
+        const OutputProperty = (field, value, prop) => {
+            const color = `${value.replace('0x', '#')}${_alpha}`;
+
+            document.documentElement.style.setProperty(prop, color);
+        };
+
+        const OutputDisable = (field, value) => {
+            if(field)
+                field.style.display = 'none';
+        };
+
+        const OutputTimer = (field, min, sec, decisec, showDecisec) => {
+            let seconds = ('00' + sec);
+
+            seconds = seconds.slice(seconds.length - 2);
+
+            if (field)
+                field.innerHTML = (min > 0) || _leadingZero ? `${min}:${seconds}${(showDecisec === 'true' ? '.' + decisec : '')}` :
+                    `${seconds}${(showDecisec === 'true' ? '.' + decisec : '')}`;
+        };
+
+        return {
+            OutputText    : OutputText,
+            OutputCounter : OutputCounter,
+            OutputMapped  : OutputMapped,
+            OutputShowHide: OutputShowHide,
+            OutputProperty: OutputProperty,
+            OutputDisable : OutputDisable,
+            OutputTimer   : OutputTimer
+        };
+    });
+
+
+    function Scoreboard() {
+        const filePath        = 'myScoreboard.xml';  //  Path to the score xml
+        const refreshInterval = 1000;                //  Milliseconds between scoreboard updates
+        const customOptions = {
+            backgroundAlpha: 'd0',                   //  Background opacity for overlay
+            showLeadingZeroUnderOneMinute: false,    //  Display 0: under one minute
+            timeoutsPerPeriod: 5                     //  Number of timeouts per period
+        };
+
+        //  Scoreboard configuration.  Edit this object to change the behavior
+        //  of the scoreboard.
+        //  type: The handler type to produce the desired output (Text, Disable, Counter, ShowHide, Property, or Mapped)
+        //  name: The field name, by convention, must equal both a node name in the xml document
+        //        as well as an element id in the page DOM tree
+        //  prop (Property only): Global css property to modify
+        //  maps (Mapped only):   Text values to translate before displaying
+        const configuration  = {'fields': [
+            { type: 'Text', name: 'HomeTeamName' },
+            { type: 'Text', name: 'GuestTeamName' },
+            { type: 'Text', name: 'gFouls' },
+            { type: 'Text', name: 'hFouls' },
+            { type: 'Text', name: 'hScore' },
+            { type: 'Text', name: 'gScore' },
+            { type: 'Disable', name: 'AuxTime' },
+            { type: 'Counter', name: 'hTol' },
+            { type: 'Counter', name: 'gTol' },
+            { type: 'ShowHide', name: 'hPoss' },
+            { type: 'ShowHide', name: 'gPoss' },
+            { type: 'Property', name: 'HomeColor', prop: '--team1Color' },
+            { type: 'Property', name: 'GuestColor', prop: '--team2Color' },
+            { type: 'Mapped', name: 'hBonus', maps: [{ value: 'true', output: 'Bonus' }] },
+            { type: 'Mapped', name: 'gBonus', maps: [{ value: 'true', output: 'Bonus' }] },
+            { type: 'Mapped', name: 'hDBonus', maps: [{ value: 'true', output: '+' }] },
+            { type: 'Mapped', name: 'gDBonus', maps: [{ value: 'true', output: '+' }] },
+            { type: 'Mapped', name: 'Period', maps: [{ value: '1', output: '1st' }, { value: '2', output: '2nd' }, { value: '3', output: '3rd' }, { value: '4', output: '4th' }] }
+        ]};
+
+        return {
+            configuration  : configuration,
+            filePath       : filePath,
+            refreshInterval: refreshInterval,
+            customOptions  : customOptions
+        };
     };
 
-    function OutputMaps(fieldObject, value) {
-        const field = document.querySelector(`#${fieldObject.field}`);
-        const replacement = fieldObject.maps.find(m => m.value === value);
 
-        if (field && replacement && replacement.output)
-            field.innerHTML = replacement.output;
-        else if(field)
-            field.innerHTML = '';
-    };
+    (window.getScores = () => {
+        const scoreboard = new Scoreboard();
+        const display    = new ScoreboardDisplay(scoreboard.customOptions.timeoutsPerPeriod,
+                            scoreboard.customOptions.backgroundAlpha, scoreboard.customOptions.showLeadingZeroUnderOneMinute);
 
-    function OutputFlag(fieldname, value) {
-        const field = document.querySelector(`#${fieldname}`);
-
-        if (field && value === 'true') {
-            field.classList.add('visible');
-            field.classList.remove('invisible');
-        }
-        else {
-            field.classList.add('invisible');
-            field.classList.remove('visible');
-        }
-    };
-
-    function OutputColor(fieldname, value) {
-        const color = `${value.replace('0x', '#')}d0`;
-
-        if (fieldname === 'HomeColor')
-            document.documentElement.style.setProperty('--team1Color', color);
-        else if (fieldname === 'GuestColor')
-            document.documentElement.style.setProperty('--team2Color', color);
-    }
-
-    function SetGameTimer(min, sec, decisec, showDecisec) {
-        const timer = document.querySelector('.timer');
-        var seconds = ('00' + sec);
-
-        seconds = seconds.slice(seconds.length - 2);
-
-        if (timer)
-            timer.innerHTML = `${min}:${seconds}${(showDecisec === 'true' ? '.' + decisec : '')}`;
-    }
-
-    (window.getScores = (window, undefined) => {
-        fetch('myScoreboard.xml')
+        fetch(scoreboard.filePath)
             .then(r => r.text())
             .then(s => (new DOMParser()).parseFromString(s, 'text/xml'))
             .then(d => {
-                const textFields = ['HomeTeamName', 'GuestTeamName', 'gFouls', 'hFouls', 'hScore', 'gScore', 'AuxTime'];
-                textFields.forEach(f => { document.querySelector(`#${f}`).innerHTML = d.querySelector(f).textContent; });
+                //  Handle each field in Scoreboard.configuration
+                scoreboard.configuration.fields.forEach(f => {
+                    const field  = document.querySelector(`#${f.name}`);
+                    display[`Output${f.type}`](field, d.querySelector(f.name).textContent, f.maps || f.prop);
+                });
 
-                const timeoutFields = ['hTol', 'gTol'];
-                timeoutFields.forEach(f => OutputTimeouts(f, d.querySelector(f).textContent));
+                //  Output the game timer
+                display.OutputTimer(document.querySelector('.timer'), d.querySelector('Min').textContent,
+                    d.querySelector('Sec').textContent, d.querySelector('Tenth').textContent, d.querySelector('ShowTenths').textContent);
 
-                const mapFields = [
-                    { field: 'hBonus', maps: [{ value: 'true', output: 'Bonus' }] },
-                    { field: 'gBonus', maps: [{ value: 'true', output: 'Bonus' }] },
-                    { field: 'hDBonus', maps: [{ value: 'true', output: '+' }] },
-                    { field: 'gDBonus', maps: [{ value: 'true', output: '+' }] },
-                    { field: 'Period', maps: [{ value: '1', output: '1st' }, { value: '2', output: '2nd' }, { value: '3', output: '3rd' }, { value: '4', output: '4th' }] },
-                ];
-
-                mapFields.forEach(f => OutputMaps(f, d.querySelector(f.field).textContent));
-
-                const flagFields = ['hPoss', 'gPoss'];
-                flagFields.forEach(f => OutputFlag(f, d.querySelector(f).textContent));
-
-                const colorFields = ['HomeColor', 'GuestColor'];
-                colorFields.forEach(f => OutputColor(f, d.querySelector(f).textContent));
-
-                SetGameTimer(d.querySelector('Min').textContent, d.querySelector('Sec').textContent,
-                    d.querySelector('Tenth').textContent, d.querySelector('ShowTenths').textContent);
-
-                //  Schedule re-run after 1s
-                setTimeout(getScores, 1000);
+                setTimeout(getScores, scoreboard.refreshInterval);
             })
             .catch(e => console.error(`Problem displaying scores: ${e}`));
-    })(window);
+    })();
 </script>
 
 </html>
