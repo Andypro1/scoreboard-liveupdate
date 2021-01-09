@@ -35,7 +35,8 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: inherit;
-            flex-basis: 18.5rem;
+            white-space: nowrap;
+            flex-basis: 25rem;
             line-height: 2rem;
             padding: 0 0.3rem;
             color: white;
@@ -379,16 +380,18 @@
                 //  Handle each field in Scoreboard.configuration
                 scoreboard.configuration.fields.forEach(f => {
                     const field  = document.querySelector(`#${f.name}`);
-                    display[`Output${f.type}`](field, d.querySelector(f.name).textContent, f.maps || f.prop);
+
+                    if(d.querySelector(f.name))
+                        display[`Output${f.type}`](field, d.querySelector(f.name).textContent, f.maps || f.prop);
                 });
 
                 //  Output the game timer
-                display.OutputTimer(document.querySelector('.timer'), d.querySelector('Min').textContent,
-                    d.querySelector('Sec').textContent, d.querySelector('Tenth').textContent, d.querySelector('ShowTenths').textContent);
-
-                setTimeout(getScores, scoreboard.refreshInterval);
+                if(d.querySelector('Min') && d.querySelector('Sec') && d.querySelector('Tenth') && d.querySelector('ShowTenths'))
+                    display.OutputTimer(document.querySelector('.timer'), d.querySelector('Min').textContent,
+                        d.querySelector('Sec').textContent, d.querySelector('Tenth').textContent, d.querySelector('ShowTenths').textContent);
             })
-            .catch(e => console.error(`Problem displaying scores: ${e}`));
+            .catch(e => console.error(`Problem displaying scores: ${e}`))
+            .finally(() => { setTimeout(getScores, scoreboard.refreshInterval); });
     })();
 </script>
 
