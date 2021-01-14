@@ -81,7 +81,7 @@
 
         .fouls-info {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             align-self: flex-start;
             display: flex;
             flex-direction: row;
@@ -305,7 +305,7 @@
 
             seconds = seconds.slice(seconds.length - 2);
 
-            if (field)
+            if(field)
                 field.innerHTML = (min > 0) || _leadingZero ? `${min}:${seconds}${(showDecisec === 'true' ? '.' + decisec : '')}` :
                     `${seconds}${(showDecisec === 'true' ? '.' + decisec : '')}`;
         };
